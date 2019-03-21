@@ -7,6 +7,8 @@ using System.IO;
 
 namespace LAB3OP
 {
+
+
     class Program
     {
         static string mapPath = "Map.txt";
@@ -14,6 +16,7 @@ namespace LAB3OP
         static int startY;
         static int finishX;
         static int finishY;
+        static bool found = false;
 
         private static int GetMapWidth()
         {
@@ -71,6 +74,7 @@ namespace LAB3OP
             }
             return map;
         }
+        
 
         static void Print(int[,] map)
         {
@@ -97,26 +101,100 @@ namespace LAB3OP
             }
         }
 
-        static void TraceRoute(int[,] map,int i, int j)
+        static bool Walkable(int[,] map, int i, int j)
         {
-            if (map[i - 1, j] == map[i, j] - 1)
-                TraceRoute(map, i - 1, j);
-            else
-                if (map[i + 1, j] == map[i, j] - 1)
-                TraceRoute(map, i + 1, j);
-            else
-                if (map[i, j - 1] == map[i, j] - 1)
-                TraceRoute(map, i, j - 1);
-            else
-                if (map[i, j + 1] == map[i, j] - 1)
-                TraceRoute(map, i, j + 1);
-            else
-                if (i == startY && j == startX)
-                return;
-            map[i, j] = 0;
-            return;
+            if (map[i - 1, j] == map[i, j] - 1 || map[i + 1, j] == map[i, j] - 1 || map[i, j - 1] == map[i, j] - 1 || map[i, j + 1] == map[i, j] - 1)
+                return true;
+            return false;
+        }
+
+
+        static void TracePath(int[,] map)
+        {
+            Stack<Tuple<int, int>> steps = new Stack<Tuple<int, int>>();
+
+            int i = finishY;
+            int j = finishX;
+
+            while (true)
+            {
+                if (j == startX && i == startY) break;
+
+                if (map[i - 1, j] == map[i, j] - 1)
+                {
+                    steps.Push(new Tuple<int, int>(i - 1, j));
+                    i = i - 1;
+                    continue;
+                }
+
+                if (map[i + 1, j] == map[i,j] - 1)
+                {
+                    steps.Push(new Tuple<int, int>(i + 1, j));
+                    i = i + 1;
+                    continue;
+                }
+
+                if (map[i, j - 1] == map[i,j] - 1)
+                {
+                    steps.Push(new Tuple<int, int>(i, j - 1));
+                    j = j - 1;
+                    continue;
+                }
+
+                if (map[i, j + 1] == map[i,j] - 1)
+                {
+                    steps.Push(new Tuple<int, int>(i, j + 1));
+                    j = j + 1;
+                    continue;
+                }
+
+                while(!Walkable(map,i,j))
+                {
+                    map[i, j] = -2;
+                    Console.Clear();
+                    Print(map);
+                    i = steps.Peek().Item1;
+                    j = steps.Peek().Item2;
+                    steps.Pop();
+                }
+            }
+
+            foreach (var step in steps)
+            {
+                map[steps.Peek().Item1, steps.Peek().Item2] = 0;
+            }
 
         }
+
+        //static void TraceRoute(int[,] map, int i, int j)
+        //{
+        //    Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
+        //    stack.Pop(). ;
+
+        //    int tmp = map[i, j];
+        //    map[i, j] = 0;
+
+        //    if (map[i - 1, j] == tmp - 1)
+        //        TraceRoute(map, i - 1, j);
+        //    else
+        //        if (map[i + 1, j] == tmp - 1)
+        //        TraceRoute(map, i + 1, j);
+        //    else
+        //        if (map[i, j - 1] == tmp - 1)
+        //        TraceRoute(map, i, j - 1);
+        //    else
+        //        if (map[i, j + 1] == tmp - 1)
+        //        TraceRoute(map, i, j + 1);
+        //    else
+        //        if (i == startY && j == startX)
+        //    {
+        //        found = true;
+        //        return;
+        //    }
+
+        //    return;
+
+        //}
 
         //static int Max(int[,] map)
         //{
@@ -136,7 +214,7 @@ namespace LAB3OP
             var map = LoadMap();
             map = CaclulateDistances(map);
             Print(map);
-            TraceRoute(map, finishY,finishX);
+            TracePath(map);
             Print(map);
             Console.ReadLine();
 
