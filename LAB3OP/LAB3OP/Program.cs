@@ -60,6 +60,17 @@ namespace LAB3OP
             return Math.Abs(x - finishX) + Math.Abs(y - finishY);
         }
 
+        static int FindMin(int[,] map, int i, int j)
+        {
+            int min = int.MaxValue;
+            foreach (var item in new int[] { map[i - 1, j], map[i + 1, j], map[i, j - 1], map[i, j + 1] })
+            {
+                if (item > 0 && item < min)
+                    min = item;
+            }
+            return min;
+        }
+
         static int[,] CaclulateDistances(int[,] map)
         {
             for (int i = 0; i < map.GetLength(0); i++)
@@ -68,15 +79,56 @@ namespace LAB3OP
                 {
                     if(map[i,j] != -1)
                     {
-                        map[i, j] = GetFinishDelta(j, i) + GetStartDelta(j, i)*2;
+                        map[i, j] += GetFinishDelta(j, i) + GetStartDelta(j, i);
                     }
                 }
             }
             return map;
         }
+
+        static bool HasZeros(int[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] == 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        static int[,] CalcDist(int[,] map)
+        {
+            map[startY, startX] = 1;
+
+            while (HasZeros(map))
+            {
+                for (int i = 1; i < map.GetLength(0) - 1; i++)
+                {
+                    for (int j = 1; j < map.GetLength(1) - 1; j++)
+                    {
+                        int min = FindMin(map, i, j);
+                        if (min == int.MaxValue || map[i, j] == -1)
+                            continue;
+
+                        if(map[i, j] > min + 1 || map[i,j] == 0) map[i, j] = min + 1;
+                        //Console.Clear();
+                        //Print(map);
+
+                    }
+                }
+
+            }
+
+            return map;
+        }
         
 
-        static void Print(int[,] map)
+        static void PrintDebug(int[,] map)
         {
             for (int i = 0; i < map.GetLength(0); i++)
             {
@@ -101,6 +153,38 @@ namespace LAB3OP
             }
         }
 
+        static void Print(int[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (j == startX && i == startY) { Console.Write("S".PadLeft(2)); continue; }
+
+                    if (j == finishX && i == finishY) { Console.Write("F".PadLeft(2)); continue; }
+
+                    if (map[i, j] == -1)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkBlue;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+                    if (map[i, j] == 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+                    Console.Write("  ");
+                }
+                Console.WriteLine();
+            }
+        }
+
         static bool Walkable(int[,] map, int i, int j)
         {
             if (map[i - 1, j] == map[i, j] - 1 || map[i + 1, j] == map[i, j] - 1 || map[i, j - 1] == map[i, j] - 1 || map[i, j + 1] == map[i, j] - 1)
@@ -118,8 +202,15 @@ namespace LAB3OP
 
             while (true)
             {
-                if (j == startX && i == startY) break;
+                if (j == startX && i == startY)
+                {
+                    foreach (var step in steps)
+                    {
 
+                        map[step.Item1, step.Item2] = 0;
+                    }
+                    break;
+                }
                 if (map[i - 1, j] == map[i, j] - 1)
                 {
                     steps.Push(new Tuple<int, int>(i - 1, j));
@@ -159,61 +250,16 @@ namespace LAB3OP
                 }
             }
 
-            foreach (var step in steps)
-            {
-                map[steps.Peek().Item1, steps.Peek().Item2] = 0;
-            }
+            
 
         }
-
-        //static void TraceRoute(int[,] map, int i, int j)
-        //{
-        //    Stack<Tuple<int, int>> stack = new Stack<Tuple<int, int>>();
-        //    stack.Pop(). ;
-
-        //    int tmp = map[i, j];
-        //    map[i, j] = 0;
-
-        //    if (map[i - 1, j] == tmp - 1)
-        //        TraceRoute(map, i - 1, j);
-        //    else
-        //        if (map[i + 1, j] == tmp - 1)
-        //        TraceRoute(map, i + 1, j);
-        //    else
-        //        if (map[i, j - 1] == tmp - 1)
-        //        TraceRoute(map, i, j - 1);
-        //    else
-        //        if (map[i, j + 1] == tmp - 1)
-        //        TraceRoute(map, i, j + 1);
-        //    else
-        //        if (i == startY && j == startX)
-        //    {
-        //        found = true;
-        //        return;
-        //    }
-
-        //    return;
-
-        //}
-
-        //static int Max(int[,] map)
-        //{
-        //    int max = map[0, 0];
-        //    for (int i = 0; i < map.GetLength(0); i++)
-        //    {
-        //        for (int j = 0; j < map.GetLength(1); j++)
-        //        {
-        //            if (map[i, j] > max) max = map[i, j];
-        //        }
-        //    }
-        //    return max;
-        //}
 
         static void Main(string[] args)
         {
             var map = LoadMap();
+            map = CalcDist(map);
             map = CaclulateDistances(map);
-            Print(map);
+            //Print(map);
             TracePath(map);
             Print(map);
             Console.ReadLine();
