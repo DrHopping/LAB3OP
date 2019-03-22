@@ -8,7 +8,6 @@ using System.IO;
 namespace LAB3OP
 {
 
-
     class Program
     {
         static string mapPath = "Map.txt";
