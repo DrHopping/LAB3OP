@@ -73,5 +73,44 @@
             prev.next = null;
             return value;
         }
+
+        public T Peek()
+        {
+            if (back != null)
+                return back.data;
+            else
+                throw new System.Exception("Queue is empty");
+        }
+
+        public int PeekPriority()
+        {
+            Node cursor = back;
+            while (cursor.next != null)
+                cursor = cursor.next;
+            return cursor.priority;
+        }
+
+        public void Clear()
+        {
+            while (back != null)
+                back = back.next;
+        }
+
+        public bool IsEmpty()
+        {
+            return (back == null);
+        }
+
+        public int Size()
+        {
+            int size = 0;
+            Node cursor = back;
+            while (cursor != null)
+            {
+                size++;
+                cursor = cursor.next;
+            }
+            return size;
+        }
     }
 }
