@@ -10,10 +10,11 @@
         }
 
         private Node back;
+        private Node end;
 
         private bool Compare(Node prev, Node next)
         {
-            return prev.priority < next.priority;
+            return prev.priority > next.priority;
         }
 
         public void Enqueue(T value, int valuePriority)
@@ -54,79 +55,24 @@
                 throw new System.Exception("Queue is empty");
             }
 
-            if (back.next == null)
-            {
-                value = back.data;
-                back = null;
-                return value;
-            }
-
-            Node prev, end;
-            prev = end = back;
-            while (end.next != null)
-            {
-                prev = end;
-                end = end.next;
-            }
-
-            value = end.data;
-            prev.next = null;
+            value = back.data;
+            back = back.next;
             return value;
+            
         }
 
         public T Peek()
         {
-            T value;
 
             if (back == null)
             {
                 throw new System.Exception("Queue is empty");
             }
 
-            if (back.next == null)
-            {
-                value = back.data;
-                return value;
-            }
-
-            Node prev, end;
-            prev = end = back;
-            while (end.next != null)
-            {
-                prev = end;
-                end = end.next;
-            }
-
-            value = end.data;
-            return value;
-        }
-
-        public int PeekPriority()
-        {
-            Node cursor = back;
-            while (cursor.next != null)
-                cursor = cursor.next;
-            return cursor.priority;
-        }
-
-        public void Clear()
-        {
-            while (back != null)
-                back = back.next;
+            return back.data;
         }
 
         public bool IsEmpty => (back == null);
 
-        public int Size()
-        {
-            int size = 0;
-            Node cursor = back;
-            while (cursor != null)
-            {
-                size++;
-                cursor = cursor.next;
-            }
-            return size;
-        }
     }
 }
