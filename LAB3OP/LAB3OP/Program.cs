@@ -108,6 +108,7 @@ namespace LAB3OP
             {
                 map[current.y, current.x] = i;
                 current = current.parent;
+                i++;
             }
         }
 
@@ -118,8 +119,6 @@ namespace LAB3OP
         static string mapPath = "Map.txt";
         static Node start;
         static Node finish;
-
-        static bool found = false;
 
         private static int GetMapWidth()
         {
@@ -153,15 +152,83 @@ namespace LAB3OP
             return map;
         }
 
+        static void DrawMap(int[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] == -1)
+                        Console.Write("X".PadLeft(2));
+                    else if (map[i, j] == 0)
+                        Console.Write("  ");
+                    else
+                        Console.Write(map[i, j].ToString().PadLeft(2));
+                }
+                Console.WriteLine();
+            }
+        }
         
+        static void DrawColor(int[,] map)
+        {
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (j == start.x && i == start.y)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Green;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+                    if (map[i, j] == -1)
+                    {
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+                    if (map[i, j] == 0)
+                    {
+                        Console.Write("  ");
+                        continue;
+                    }
+
+
+                    if (j == finish.x && i == finish.y)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Red;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+
+                    if (map[i, j] > 0)
+                    {
+                        Console.BackgroundColor = ConsoleColor.Blue;
+                        Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        continue;
+                    }
+
+                }
+                Console.WriteLine();
+            }
+        }
+
 
         static void Main(string[] args)
         {
             var map = LoadMap();
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
-            Console.WriteLine(pathfinding.FindPath());
+            //Console.WriteLine(pathfinding.FindPath());
+            pathfinding.FindPath();
             pathfinding.DrawPath();
-
+            DrawColor(map);
 
             Console.ReadLine();
 
