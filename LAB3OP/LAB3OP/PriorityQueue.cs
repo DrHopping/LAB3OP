@@ -10,7 +10,6 @@
         }
 
         private Node back;
-        private Node end;
 
         private bool Compare(Node prev, Node next)
         {

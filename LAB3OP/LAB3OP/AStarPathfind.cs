@@ -98,12 +98,16 @@ namespace LAB3OP
         public void DrawPath()
         {
             Node current = openList.Peek();
-            int i = 1;
+            int i = 48;
             while(current != start)
             {
                 map[current.y, current.x] = i;
                 current = current.parent;
-                i++;
+                if (i == 58) i = i + 7;
+                else
+                if (i == 91) i = i + 6;
+                else
+                    i++;
             }
         }
 

@@ -10,6 +10,7 @@ namespace LAB3OP
     class Program
     {
         static string mapPath = "Map.txt";
+        static string textPath = "Solved.txt";
         static Node start;
         static Node finish;
 
@@ -113,10 +114,31 @@ namespace LAB3OP
             }
         }
 
+        static void SaveTextPath(int[,] map)
+        {
+            if (File.Exists(textPath))
+                File.Create(textPath);
+            StreamWriter sw = new StreamWriter(textPath);
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    if (map[i, j] == -1)
+                        sw.Write("X");
+                    else if (map[i, j] == 0)
+                        Console.Write(" ");
+                    else
+                        Console.Write((char)map[i, j]);
+                }
+                Console.WriteLine();
+            }
+        }
+
         static void Main(string[] args)
         {
             var map = LoadMap();
-            Console.SetWindowSize(map.GetLength(1)*2 + 1, map.GetLength(0));
+            Console.SetWindowSize(map.GetLength(1) * 2 + 1, map.GetLength(0));
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
 
             if (pathfinding.FindPath())
@@ -127,7 +149,6 @@ namespace LAB3OP
             else
                 Console.WriteLine("There is no way from start to finish!");
             Console.ReadLine();
-
         }
     }
 }
