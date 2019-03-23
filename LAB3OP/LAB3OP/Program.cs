@@ -11,8 +11,8 @@ namespace LAB3OP
     class Program
     {
         static string mapPath = "Map.txt";
-        static int startX;
-        static int startY;
+        public static int startX;
+        public static int startY;
         static int finishX;
         static int finishY;
         static bool found = false;
