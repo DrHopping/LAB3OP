@@ -69,7 +69,7 @@ namespace LAB3OP
             {
                 Node current = openList.Peek();
 
-                if (Node.Compare(start, current))
+                if (Node.Compare(finish, current))
                     return true;
 
                 openList.Dequeue();
@@ -99,6 +99,7 @@ namespace LAB3OP
 
             return false;
         }
+
 
     }
 
@@ -149,6 +150,7 @@ namespace LAB3OP
             var map = LoadMap();
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
             Console.WriteLine(pathfinding.FindPath());
+
             Console.ReadLine();
 
         }

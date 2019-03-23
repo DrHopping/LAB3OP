@@ -13,7 +13,7 @@
 
         private bool Compare(Node prev, Node next)
         {
-            return prev.priority > next.priority;
+            return prev.priority < next.priority;
         }
 
         public void Enqueue(T value, int valuePriority)
@@ -76,10 +76,29 @@
 
         public T Peek()
         {
-            if (back != null)
-                return back.data;
-            else
+            T value;
+
+            if (back == null)
+            {
                 throw new System.Exception("Queue is empty");
+            }
+
+            if (back.next == null)
+            {
+                value = back.data;
+                return value;
+            }
+
+            Node prev, end;
+            prev = end = back;
+            while (end.next != null)
+            {
+                prev = end;
+                end = end.next;
+            }
+
+            value = end.data;
+            return value;
         }
 
         public int PeekPriority()
