@@ -118,8 +118,8 @@ namespace LAB3OP
         {
             var map = LoadMap();
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
-            //Console.WriteLine(pathfinding.FindPath());
-            pathfinding.FindPath();
+            Console.WriteLine(pathfinding.FindPath());
+            //pathfinding.FindPath();
             pathfinding.DrawPath();
             DrawColor(map);
 
