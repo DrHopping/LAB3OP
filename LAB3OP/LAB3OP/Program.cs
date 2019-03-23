@@ -38,7 +38,8 @@ namespace LAB3OP
             openList.Enqueue(start, start.totalCost);
             while(!openList.IsEmpty)
             {
-
+                Node current = openList.Peek();
+                if(current)
             }
 
         }
