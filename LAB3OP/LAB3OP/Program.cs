@@ -32,16 +32,72 @@ namespace LAB3OP
         {
             return Math.Abs(finish.x - location.x) + Math.Abs(finish.y - location.y);
         }
-        
-        public FindPath()
+
+        private List<Node> Successors(Node location)
+        {
+            List<Node> successors = new List<Node>();
+
+            if (location.x - 1 > 0 && map[location.y, location.x - 1] != -1)
+                successors.Add(new Node(location.x - 1, location.y));
+
+            if (location.x + 1 < map.GetLength(1) && map[location.y, location.x + 1] != -1)
+                successors.Add(new Node(location.x + 1, location.y));
+
+            if (location.y - 1 > 0 && map[location.y - 1, location.x] != -1)
+                successors.Add(new Node(location.x, location.y - 1));
+
+            if (location.y + 1 < map.GetLength(0) && map[location.y + 1, location.x] != -1)
+                successors.Add(new Node(location.x, location.y + 1));
+
+            return successors;
+        }
+
+        private bool InClosedList(Node location)
+        {
+            foreach (var closed in closedList)
+            {
+                if (location.x == closed.x && location.y == closed.y)
+                    return true;
+            }
+            return false;
+        }
+
+        public bool FindPath()
         {
             openList.Enqueue(start, start.totalCost);
             while(!openList.IsEmpty)
             {
                 Node current = openList.Peek();
-                if(current)
+
+                if (Node.Compare(start, current))
+                    return true;
+
+                openList.Dequeue();
+                closedList.Add(current);
+
+                foreach (var location in Successors(current))
+                {
+                    //location.gCost = current.gCost + 1;
+                    //location.hCost = CalcHeuristic(location);
+                    //location.totalCost = location.gCost + location.hCost;
+                    int tentativeCost = current.gCost + 1;
+
+                    if (InClosedList(location) && tentativeCost >= location.gCost)
+
+                        continue;
+                    if(!InClosedList(location) || tentativeCost < location.gCost)
+                    {
+                        location.parent = current;
+                        location.gCost = tentativeCost;
+                        location.hCost = CalcHeuristic(location);
+                        location.totalCost = location.gCost + location.hCost;
+                        if (!InClosedList(location))
+                            openList.Enqueue(location, location.totalCost);
+                    }
+                }
             }
 
+            return false;
         }
 
     }
@@ -91,6 +147,8 @@ namespace LAB3OP
         static void Main(string[] args)
         {
             var map = LoadMap();
+            AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
+            Console.WriteLine(pathfinding.FindPath());
             Console.ReadLine();
 
         }
