@@ -78,15 +78,15 @@ namespace LAB3OP
 
                     if (map[i, j] == -1)
                     {
-                        Console.BackgroundColor = ConsoleColor.White;
                         Console.Write("  ");
-                        Console.BackgroundColor = ConsoleColor.Black;
                         continue;
                     }
 
                     if (map[i, j] == 0)
                     {
+                        Console.BackgroundColor = ConsoleColor.White;
                         Console.Write("  ");
+                        Console.BackgroundColor = ConsoleColor.Black;
                         continue;
                     }
 
