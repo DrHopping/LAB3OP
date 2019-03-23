@@ -96,10 +96,7 @@
                 back = back.next;
         }
 
-        public bool IsEmpty()
-        {
-            return (back == null);
-        }
+        public bool IsEmpty => (back == null);
 
         public int Size()
         {

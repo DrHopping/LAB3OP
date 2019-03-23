@@ -10,8 +10,12 @@
         public Node parent;
 
         public Node() { }
-        
 
+        public Node(int x, int y)
+        {
+            this.x = x;
+            this.y = y;
+        }
 
         public Node(int x, int y,int heuristic, Node parent )
         {

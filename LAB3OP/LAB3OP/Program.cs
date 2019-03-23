@@ -8,13 +8,49 @@ using System.IO;
 namespace LAB3OP
 {
 
+    class AStarPathfind
+    {
+        Node start;
+        Node finish;
+        int[,] map;
+
+        PriorityQueue<Node> openList = new PriorityQueue<Node>();
+        List<Node> closedList = new List<Node>();
+
+
+        public AStarPathfind(Node start, Node finish, int[,] map)
+        {
+            this.start = start;
+            this.finish = finish;
+            this.map = map;
+            start.gCost = 0;
+            start.hCost = CalcHeuristic(start);
+            start.totalCost = start.gCost + start.hCost;
+        }
+
+        private int CalcHeuristic(Node location)
+        {
+            return Math.Abs(finish.x - location.x) + Math.Abs(finish.y - location.y);
+        }
+        
+        public FindPath()
+        {
+            openList.Enqueue(start, start.totalCost);
+            while(!openList.IsEmpty)
+            {
+
+            }
+
+        }
+
+    }
+
     class Program
     {
         static string mapPath = "Map.txt";
-        public static int startX;
-        public static int startY;
-        static int finishX;
-        static int finishY;
+        static Node start;
+        static Node finish;
+
         static bool found = false;
 
         private static int GetMapWidth()
@@ -42,8 +78,8 @@ namespace LAB3OP
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
                     if (line[j] == 'X') map[i, j] = -1;
-                    if (line[j] == 'S') { startX = j; startY = i; }
-                    if (line[j] == 'F') { finishX = j; finishY = i; }
+                    if (line[j] == 'S') { start = new Node(j, i); }
+                    if (line[j] == 'F') { finish = new Node(j, i); }
                 }
             }
             return map;
