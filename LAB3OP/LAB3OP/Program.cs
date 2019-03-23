@@ -100,6 +100,16 @@ namespace LAB3OP
             return false;
         }
 
+        public void DrawPath()
+        {
+            Node current = openList.Peek();
+            int i = 1;
+            while(current != start)
+            {
+                map[current.y, current.x] = i;
+                current = current.parent;
+            }
+        }
 
     }
 
@@ -150,6 +160,8 @@ namespace LAB3OP
             var map = LoadMap();
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
             Console.WriteLine(pathfinding.FindPath());
+            pathfinding.DrawPath();
+
 
             Console.ReadLine();
 
