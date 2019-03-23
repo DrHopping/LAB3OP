@@ -103,9 +103,10 @@ namespace LAB3OP
             {
                 map[current.y, current.x] = i;
                 current = current.parent;
-                if (i == 58) i = i + 7;
+                if (i == 122) i = 47;
+                if (i == 57) i = i + 8;
                 else
-                if (i == 91) i = i + 6;
+                if (i == 90) i = i + 7;
                 else
                     i++;
             }

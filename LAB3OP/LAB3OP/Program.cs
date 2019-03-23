@@ -114,9 +114,9 @@ namespace LAB3OP
             }
         }
 
-        static void SaveTextPath(int[,] map)
+        static void SaveText(int[,] map)
         {
-            if (File.Exists(textPath))
+            if (!File.Exists(textPath))
                 File.Create(textPath);
             StreamWriter sw = new StreamWriter(textPath);
 
@@ -127,12 +127,13 @@ namespace LAB3OP
                     if (map[i, j] == -1)
                         sw.Write("X");
                     else if (map[i, j] == 0)
-                        Console.Write(" ");
+                        sw.Write(" ");
                     else
-                        Console.Write((char)map[i, j]);
+                        sw.Write((char)map[i, j]);
                 }
-                Console.WriteLine();
+                sw.WriteLine();
             }
+            sw.Close();
         }
 
         static void Main(string[] args)
@@ -144,6 +145,7 @@ namespace LAB3OP
             if (pathfinding.FindPath())
             {
                 pathfinding.DrawPath();
+                SaveText(map);
                 DrawColor(map);
             }
             else
