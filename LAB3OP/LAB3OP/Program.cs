@@ -113,16 +113,19 @@ namespace LAB3OP
             }
         }
 
-
         static void Main(string[] args)
         {
             var map = LoadMap();
+            Console.SetWindowSize(map.GetLength(1)*2 + 1, map.GetLength(0));
             AStarPathfind pathfinding = new AStarPathfind(start, finish, map);
-            Console.WriteLine(pathfinding.FindPath());
-            //pathfinding.FindPath();
-            pathfinding.DrawPath();
-            DrawColor(map);
 
+            if (pathfinding.FindPath())
+            {
+                pathfinding.DrawPath();
+                DrawColor(map);
+            }
+            else
+                Console.WriteLine("There is no way from start to finish!");
             Console.ReadLine();
 
         }
